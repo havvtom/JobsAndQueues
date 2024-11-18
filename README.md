@@ -175,3 +175,37 @@ To simulate canceling a running job, we have added an example job class `App\Job
 5. When the job is running, a **Cancel** button will appear, which can be used to cancel the running job.
 
 This example helps simulate the cancellation of a running job, which can be useful for testing or managing long-running tasks in the queue.
+
+### Simulating and Testing Job Retries
+
+To simulate and test retries, I have added the `SendEmailsJob` which is designed to throw an error during execution. This allows you to test the retry logic in your background job processing system. Here’s how the process works:
+
+1. **Job Failure Simulation:**
+   - The `SendEmailsJob` is intentionally designed to fail by throwing an error during its execution.
+   - When this job is processed, it will immediately fail and trigger the retry logic.
+
+2. **Retry Logic:**
+   - After the job fails, it will be retried after one minute.
+   - Each time the job fails, the `retry_count` increases, and the system will attempt to process the job again.
+
+3. **Max Retries:**
+   - The retry logic will allow the job to retry up to three times.
+   - After the third failed attempt, the job’s status will be updated to `failed`, and it will no longer be retried.
+
+4. **Testing:**
+   - You can simulate this behavior by adding the `SendEmailsJob` to the queue and then triggering the job processing.
+   - After each retry, you can check the job’s status and retry count to ensure the logic is functioning correctly.
+
+5. **How to Test:**
+   - Add the `SendEmailsJob` to the queue.
+   - Use the "Process Pending Tasks" button in the dashboard or run the following command to start processing jobs:
+
+     ```bash
+     php artisan job:process
+     ```
+
+   - Refresh the page to check the job’s status. The job will attempt to run and, upon failure, will retry according to the retry settings.
+   - After three failed attempts, the job status will be updated to `failed`, and no further retries will be attempted.
+
+By following these steps, you can test the retry functionality and ensure that your system handles failed jobs and retries correctly.
+

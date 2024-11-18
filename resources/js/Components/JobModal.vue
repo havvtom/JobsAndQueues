@@ -57,7 +57,8 @@
                             class="mt-1 block w-full border-gray-300 text-gray-400 rounded-md shadow-sm"
                             required
                         />
-                        <select                           
+                        <select  
+                            v-if="!isEditMode"                         
                             id="priority"
                             v-model="jobForm.name"
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
