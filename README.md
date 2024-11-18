@@ -158,7 +158,7 @@ class ExampleJob
         }
     }
 }
-
+```
 The queue worker can be started from the dashboard by clicking the "Process Pending Tasks" button. Optionally, you can also use the command line to start the worker:
 
 ```bash
