@@ -6,14 +6,14 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\CustomJobsController;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -29,7 +29,7 @@ require __DIR__.'/auth.php';
 
 
 
-Route::get('/jobs', [CustomJobsController::class, 'index'])->name('jobs.index');
+Route::get('/', [CustomJobsController::class, 'index'])->name('jobs.index');
 Route::post('/jobs', [CustomJobsController::class, 'store'])->name('jobs.store');
 Route::post('/jobs/cancel/{id}', [CustomJobsController::class, 'cancel'])->name('jobs.cancel');
 Route::post('/jobs/retry/{id}', [CustomJobsController::class, 'retry'])->name('jobs.retry');
