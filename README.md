@@ -91,3 +91,76 @@ php artisan job:add {className} {method} {--parameters=} {--priority=1} {--delay
 - `--max_retries`: The maximum number of retries if the job fails (default: 3).
 
 To add a job through the dashboard, simply navigate to the home URL and click the "Add to Queue" button.
+
+### 7. Job Status
+
+Jobs have the following statuses:
+
+- `--pending`: Job is waiting to be processed.
+- `--running`: Job is currently being processed.
+- `--completed`: Job has been processed successfully.
+- `--failed`: Job has failed and is subject to retry logic.
+
+You can check the job status in the custom_jobs table in your database or on the dashboard.
+
+### Job Logs
+Job success and failure events are logged in the storage/logs/laravel.log file.
+
+### Custom Job Class
+### Creating a Custom Job
+
+To create a custom job, define a job class inside the `app/Jobs` directory. Here's an example of how to define a job class:
+
+You can use the following example job. All files in the `App\Jobs` directory are automatically scanned when using the dashboard and can be selected from the dropdown when adding jobs to the queue.
+
+```php
+<?php
+
+namespace App\Jobs;
+
+use App\Models\CustomJob;
+use Illuminate\Support\Facades\Log;
+
+class ExampleJob
+{
+    protected $job;  // Store the CustomJob model
+
+    // Modify the constructor to accept the CustomJob model
+    public function __construct(CustomJob $job)
+    {
+        $this->job = $job;
+    }
+
+    public function handle()
+    {
+        try {
+            $parameters = $this->job->parameters;  // Get parameters from the job model
+
+            // Job logic here
+            Log::info('Job executed successfully', ['data' => $parameters]);
+
+            // Mark the job as completed
+            $updateJob = CustomJob::find($this->job->id);
+            $updateJob->status = 'completed';
+            $updateJob->save();
+
+        } catch (\Exception $e) {
+            // Log failure
+            Log::error('Job execution failed', [
+                'error' => $e->getMessage(),
+                'job_name' => $this->job->name
+            ]);
+
+            // Mark the job as failed
+            $this->job->status = 'failed';
+            $this->job->error = $e->getMessage();
+            $this->job->save();
+        }
+    }
+}
+
+The queue worker can be started from the dashboard by clicking the "Process Pending Tasks" button. Optionally, you can also use the command line to start the worker:
+
+```bash
+php artisan job:process
+```
