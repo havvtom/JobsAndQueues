@@ -164,3 +164,14 @@ The queue worker can be started from the dashboard by clicking the "Process Pend
 ```bash
 php artisan job:process
 ```
+### Simulating Cancelling a Running Job
+
+To simulate canceling a running job, we have added an example job class `App\Jobs\ImportLoansJob`, which contains a while loop to represent a long-running process. Follow these steps:
+
+1. Add `ImportLoansJob` to the queue.
+2. Click the **Process Pending Tasks** button on the dashboard to start the job.
+3. After clicking **Process Pending Tasks**, the job status will change from `pending` to `running` once the queue worker starts processing the job.
+4. Refresh the home page to see the updated status.
+5. When the job is running, a **Cancel** button will appear, which can be used to cancel the running job.
+
+This example helps simulate the cancellation of a running job, which can be useful for testing or managing long-running tasks in the queue.
