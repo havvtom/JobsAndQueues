@@ -52,8 +52,9 @@ if (!function_exists('runBackgroundJob')) {
             // Retry logic: move back to 'pending' if retry count is less than max retries
             if ($job->retry_count < $job->max_retries) {
                 $job->status = 'pending';
-                $job->scheduled_at = now()->addMinutes(1); // Delay the retry by 1 minutes
-                Log::info("Job {$job->name} will retry in 5 minutes.");
+                $job->scheduled_at = now()->addSeconds(10);
+                 // Delay the retry by 10 seconds
+                Log::info("Job {$job->name} will retry in 30 seconds.");
             }
 
             $job->save();
