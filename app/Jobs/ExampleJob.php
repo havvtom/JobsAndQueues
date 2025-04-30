@@ -29,6 +29,11 @@ class ExampleJob
             $updateJob->status = 'completed';
             $updateJob->save();
 
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Job completed.'
+            ]);
+
         } catch (\Exception $e) {
             // Log failure
             Log::error('Job execution failed', [
@@ -40,6 +45,11 @@ class ExampleJob
             $this->job->status = 'failed';
             $this->job->error = $e->getMessage();
             $this->job->save();
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => $e->getMessage()
+            ]);
         }
     }
 }
